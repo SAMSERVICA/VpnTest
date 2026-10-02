@@ -19,7 +19,7 @@ RUN mkdir -p /opt/seed \
  || echo "sing-box prefetch skipped (will download at runtime)"; \
  rm -rf /tmp/sb.tgz /tmp/sing-box-*
 
-# ====================== ENTRYPOINT درست ======================
+# ====================== ENTRYPOINT اجباری ======================
 RUN printf '#!/bin/sh\n\
 mkdir -p "$BK_DATA_DIR/bin"\n\
 if [ -f /opt/seed/sing-box ] && [ ! -f "$BK_DATA_DIR/bin/sing-box" ]; then cp /opt/seed/sing-box "$BK_DATA_DIR/bin/sing-box"; chmod +x "$BK_DATA_DIR/bin/sing-box"; fi\n\
