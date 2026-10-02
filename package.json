@@ -1,0 +1,21 @@
+{
+  "name": "neotenet",
+  "version": "1.0.0",
+  "description": "NeoTenet — High-performance multi-protocol proxy & web panel for Katabump containers",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node server.js",
+    "bundle": "node scripts/bundle.js",
+    "test": "node test/smoke.test.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "express": "^4.21.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "author": "NeoTenet",
+  "license": "MIT"
+}
