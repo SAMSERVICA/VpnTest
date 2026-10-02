@@ -9,22 +9,26 @@ COPY package.json ./
 RUN npm install --omit=dev --no-audit --no-fund
 COPY index.js ./
 
-# Pre-download sing-box at build time (best-effort; the app can still download it at runtime)
+# Pre-download sing-box (مهم برای suga)
 ARG SB_VER=1.11.15
 RUN mkdir -p /opt/seed \
- && ( curl -fsSL "https://github.com/SagerNet/sing-box/releases/download/v${SB_VER}/sing-box-${SB_VER}-linux-amd64.tar.gz" -o /tmp/sb.tgz \
+ && (curl -fsSL "https://github.com/SagerNet/sing-box/releases/download/v${SB_VER}/sing-box-${SB_VER}-linux-amd64.tar.gz" -o /tmp/sb.tgz \
       && tar -xzf /tmp/sb.tgz -C /tmp \
       && cp /tmp/sing-box-${SB_VER}-linux-amd64/sing-box /opt/seed/sing-box \
       && chmod +x /opt/seed/sing-box ) \
  || echo "sing-box prefetch skipped (will download at runtime)"; \
  rm -rf /tmp/sb.tgz /tmp/sing-box-*
 
-RUN printf '#!/bin/sh\nmkdir -p "$BK_DATA_DIR/bin"\nif [ -f /opt/seed/sing-box ] && [ ! -f "$BK_DATA_DIR/bin/sing-box" ]; then cp /opt/seed/sing-box "$BK_DATA_DIR/bin/sing-box"; chmod +x "$BK_DATA_DIR/bin/sing-box"; fi\nexec node /app/index.js\n' > /entrypoint.sh \
+# ====================== ENTRYPOINT ======================
+RUN printf '#!/bin/sh\n\
+mkdir -p "$BK_DATA_DIR/bin"\n\
+if [ -f /opt/seed/sing-box ] && [ ! -f "$BK_DATA_DIR/bin/sing-box" ]; then cp /opt/seed/sing-box "$BK_DATA_DIR/bin/sing-box"; chmod +x "$BK_DATA_DIR/bin/sing-box"; fi\n\
+exec node /app/index.js\n' > /entrypoint.sh \
  && chmod +x /entrypoint.sh
 
-# ---- Suga defaults (all overridable from the Suga dashboard -> Environment Variables) ----
+# ---- Suga + NeoTenet defaults (همگی قابل تغییر در سوییچ) ----
 ENV NODE_ENV=production \
-    PORT=8080 \
+    PORT=2705 \
     BK_DATA_DIR=/data \
     EDGE_TLS=1 \
     EXTERNAL_PORT=443 \
@@ -33,5 +37,5 @@ ENV NODE_ENV=production \
     ENABLE_SS=0 \
     ENABLE_VLESS_GRPC=0
 
-EXPOSE 8080
+EXPOSE 2705
 CMD ["/entrypoint.sh"]
