@@ -9,7 +9,7 @@ COPY package.json ./
 RUN npm install --omit=dev --no-audit --no-fund
 COPY index.js ./
 
-# Pre-download sing-box (مهم برای suga)
+# Pre-download sing-box
 ARG SB_VER=1.11.15
 RUN mkdir -p /opt/seed \
  && (curl -fsSL "https://github.com/SagerNet/sing-box/releases/download/v${SB_VER}/sing-box-${SB_VER}-linux-amd64.tar.gz" -o /tmp/sb.tgz \
@@ -19,14 +19,14 @@ RUN mkdir -p /opt/seed \
  || echo "sing-box prefetch skipped (will download at runtime)"; \
  rm -rf /tmp/sb.tgz /tmp/sing-box-*
 
-# ====================== ENTRYPOINT ======================
+# ====================== ENTRYPOINT درست ======================
 RUN printf '#!/bin/sh\n\
 mkdir -p "$BK_DATA_DIR/bin"\n\
 if [ -f /opt/seed/sing-box ] && [ ! -f "$BK_DATA_DIR/bin/sing-box" ]; then cp /opt/seed/sing-box "$BK_DATA_DIR/bin/sing-box"; chmod +x "$BK_DATA_DIR/bin/sing-box"; fi\n\
 exec node /app/index.js\n' > /entrypoint.sh \
  && chmod +x /entrypoint.sh
 
-# ---- Suga + NeoTenet defaults (همگی قابل تغییر در سوییچ) ----
+# ====================== تنظیمات سگا + NeoTenet ======================
 ENV NODE_ENV=production \
     PORT=2705 \
     BK_DATA_DIR=/data \
